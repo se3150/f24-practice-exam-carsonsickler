@@ -17,10 +17,24 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Install chromedriver
-        uses: nanasess/setup-chromedriver@master
-      - name: Install behave
-        run: pip install behave behave-webdriver
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9' # Specify the Python version being used
+
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install behave behave-webdriver
+          python3 -m pip install selenium==3.141.0
+          python3 -m pip install --upgrade urllib3==1.26.16
+
+      - name: Install Chrome and ChromeDriver
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: 131
+          install-chromedriver: true
+          install-dependencies: true
           
           
 
