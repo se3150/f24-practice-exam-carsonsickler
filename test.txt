@@ -1,0 +1,11 @@
+RunFunctionalTests:
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Install chromedriver
+      uses: nanasess/setup-chromedriver@master
+    - name: Install behave
+      run: pip install behave behave-webdriver
+    - name: Run tests
+      run: behave
