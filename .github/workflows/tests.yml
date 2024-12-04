@@ -1,30 +1,44 @@
 name: Run Tests
 on: [push]
+
 jobs:
   RunBatteryTests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
+
       - name: Install pytest
         run: pip install pytest pytest-spec pytest-describe
+
       - name: Run pytest
         run: pytest --spec --color=yes test_battery.py
 
   RunFunctionalTests:
     runs-on: ubuntu-latest
     steps:
-        - name: Checkout repo
-          uses: actions/checkout@v2
-        - name: Install chromedriver
-          uses: nanasess/setup-chromedriver@master
-        - name: Install behave
-          run: pip install behave behave-webdriver
-        - name: Run tests
-          run: behave
+      - name: Checkout repo
+        uses: actions/checkout@v2
 
-        - name: Run behave
-          env:
-            PATH: /usr/local/bin:$PATH  # Ensure chromedriver is in the PATH
-          run: |
-            python3 -m behave features
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libappindicator3-1 fonts-liberation libx11-xcb1 libnss3-dev
+          python3 -m pip install --upgrade pip
+          python3 -m pip install behave behave-webdriver selenium==3.141.0
+          python3 -m pip install --upgrade urllib3==1.26.16
+
+      - name: Install Chrome and Chromedriver
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: latest  # Or specify the exact version
+          install-chromedriver: true
+          install-dependencies: true
+
+      - name: Run Behave Tests
+        run: python3 -m behave features
