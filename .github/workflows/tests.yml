@@ -42,4 +42,4 @@ jobs:
         env:
           PATH: /usr/local/bin:$PATH  # Ensure chromedriver is in the PATH
         run: |
-          python3 -m behave features% 
+          python3 -m behave features
